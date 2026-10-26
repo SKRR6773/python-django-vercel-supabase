@@ -2,5 +2,7 @@
 # Build step run by Vercel to collect static files.
 set -euo pipefail
 
-pip install -r requirements.txt
-python src/manage.py collectstatic --noinput
+# Vercel's build Python is externally managed (PEP 668), so allow pip to
+# install into it.
+python3 -m pip install --break-system-packages -r requirements.txt
+python3 src/manage.py collectstatic --noinput
