@@ -33,5 +33,7 @@ jobs:
       - name: Check for missing migrations
         run: python src/manage.py makemigrations --check --dry-run
 
+      # Pass app labels explicitly: src/ is not a package, so bare
+      # `test` auto-discovery from the repo root finds nothing.
       - name: Run tests
-        run: python src/manage.py test
+        run: python src/manage.py test core
