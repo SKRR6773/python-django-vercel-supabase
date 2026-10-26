@@ -21,9 +21,9 @@ __pycache__/
 *.log
 db.sqlite3
 db.sqlite3-journal
-/staticfiles/
-/src/staticfiles/
 /media/
+# NOTE: src/staticfiles/ is intentionally committed — it is collected by
+# `manage.py collectstatic` and bundled into the Vercel function for WhiteNoise.
 
 # Vercel
 .vercel
