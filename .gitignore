@@ -1,0 +1,34 @@
+# Python virtual environment (created at repo root)
+bin/
+include/
+lib/
+lib64
+pyvenv.cfg
+.venv/
+venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/src/staticfiles/
+/media/
+
+# Vercel
+.vercel
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
