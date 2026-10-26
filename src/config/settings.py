@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -92,13 +93,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Uses DATABASE_URL (Supabase Postgres) when set, otherwise falls back to
 # local SQLite for development.
+_DATABASE_URL = os.environ.get('DATABASE_URL')
+# Ignore the .env.example placeholder so a half-filled DATABASE_URL doesn't
+# break startup — fall back to local SQLite until a real password is set.
+if _DATABASE_URL and '[YOUR-PASSWORD]' in _DATABASE_URL:
+    _DATABASE_URL = None
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
-        conn_max_age=600,
-        ssl_require=bool(os.environ.get('DATABASE_URL')),
+    'default': dj_database_url.parse(
+        _DATABASE_URL or f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        # Serverless (Vercel) connects through Supabase's transaction pooler,
+        # which manages pooling itself, so don't keep persistent connections.
+        conn_max_age=0,
+        ssl_require=bool(_DATABASE_URL),
     )
 }
+
+if _DATABASE_URL:
+    # Supabase's transaction pooler (PgBouncer in transaction mode) does not
+    # support server-side cursors; Django must disable them.
+    DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 
 
 # Password validation
